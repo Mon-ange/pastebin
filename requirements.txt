@@ -3,4 +3,4 @@ uvicorn[standard]
 sqlalchemy
 fastapi_pagination
 
-mysqlclient
+# mysqlclient
