@@ -2,9 +2,12 @@ import datetime
 
 from fastapi import FastAPI, Depends, Request
 from sqlalchemy.orm import Session
-from fastapi_pagination import Page, add_pagination
+from fastapi_pagination import Params
 from fastapi_pagination.ext.sqlalchemy import paginate
-from . import schemas, crud, models
+
+from . import schemas, crud, models, database, config
+
+models.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI()
 
@@ -34,20 +37,11 @@ def get_paste(token: str, db: Session = Depends(crud.get_db)):
     paste = crud.get_paste_by_token(db, token)
     if paste is None:
         return {"message": "game over"}
-    return schemas.PasteGet(
-        poster=paste.poster,
-        language=paste.language,
-        content=paste.content,
-        paste_time=paste.paste_time.timestamp(),
-        expire_time=paste.expire_time.timestamp(),
-        is_public=paste.is_public
-    )
+    return schemas.PasteGet.from_db_model(paste)
 
 
-@app.get("/page/", response_model=Page[schemas.PasteGet])
-def get_page(db: Session = Depends(crud.get_db)):
-    # print(paginate(db.query(models.Paste)))
-    return paginate(db.query(models.Paste))
-
-
-add_pagination(app)
+@app.get("/page/{page_num}")
+def get_page(page_num: int, db: Session = Depends(crud.get_db)):
+    page = paginate(db.query(models.Paste), Params(page=page_num, size=config.PAGE_LIMIT))
+    page.items = [schemas.PasteGet.from_db_model(i) for i in page.items]
+    return page

@@ -16,4 +16,3 @@ class Paste(Base):
     paste_time = Column(DateTime)  # 发布时间
     expire_time = Column(DateTime)  # 过期时间
     is_public = Column(Boolean)  # 是否公开
-
