@@ -3,5 +3,5 @@ uvicorn[standard]
 sqlalchemy
 fastapi_pagination
 
-mysqlclient
+# mysqlclient
 psycopg2-binary
