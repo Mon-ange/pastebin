@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from datetime import datetime
 from . import models
 
 
@@ -16,8 +16,8 @@ class PasteGet(BaseModel):
     poster: str
     language: str
     content: str
-    paste_time: float
-    expire_time: float
+    paste_time: datetime
+    expire_time: datetime
     is_public: bool
 
     @classmethod
@@ -27,7 +27,7 @@ class PasteGet(BaseModel):
             poster=paste.poster,
             language=paste.language,
             content=paste.content,
-            paste_time=paste.paste_time.timestamp(),
-            expire_time=paste.expire_time.timestamp(),
+            paste_time=paste.paste_time,
+            expire_time=paste.expire_time,
             is_public=paste.is_public
         )

@@ -6,3 +6,4 @@ SQLALCHEMY_DATABASE_URL = "sqlite:///./paste.db"
 
 PAGE_LIMIT = 5
 
+CORS_ALLOW_ORIGIN = ["http://localhost:5500"]
